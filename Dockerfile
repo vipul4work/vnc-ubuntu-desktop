@@ -1,5 +1,7 @@
 FROM ubuntu:20.04 as system
+
 RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
+
 # built-in packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update \
@@ -12,7 +14,8 @@ RUN apt update \
     && apt autoclean -y \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/*
-# install debs error if combine together
+
+# install debs
 RUN apt update \
     && apt install -y --no-install-recommends --allow-unauthenticated \
         xvfb x11vnc \
@@ -27,6 +30,7 @@ RUN apt update \
     && apt autoclean -y \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+
 
 # tini to fix subreap
 COPY tini /bin/tini
