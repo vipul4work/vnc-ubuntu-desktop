@@ -10,6 +10,8 @@ server {
 	#_HTTP_PASSWORD_#auth_basic "Private Property";
 	#_HTTP_PASSWORD_#auth_basic_user_file /etc/nginx/.htpasswd;
 
+    add_header "Cross-Origin-Resource-Policy" "cross-origin" always;
+
 	root /usr/local/lib/web/frontend/;
 	index index.html index.htm;
 

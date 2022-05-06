@@ -31,7 +31,6 @@ RUN apt update \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-
 # tini to fix subreap
 COPY tini /bin/tini
 RUN chmod +x /bin/tini
@@ -58,6 +57,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/cache/apt/* /tmp/a.txt /tmp/b.txt
 
+RUN apt-get update && apt-get install -y wget
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # builder
 FROM node:12 as builder
