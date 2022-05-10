@@ -57,12 +57,29 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/cache/apt/* /tmp/a.txt /tmp/b.txt
 
-RUN apt-get update && apt-get install -y wget
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+# RUN apt-get update && apt-get install -y wget
+# RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # builder
-FROM node:12 as builder
+FROM ubuntu:20.04 as builder
+
+
+RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
+
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates gnupg patch
+
+# nodejs
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+    && apt-get install -y nodejs
+
+# yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get install -y yarn
 
 # build frontend
 COPY web /src/web
